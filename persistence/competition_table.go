@@ -1,0 +1,42 @@
+package persistence
+
+import (
+	"log"
+
+	"database/sql"
+
+	_ "github.com/mattn/go-sqlite3"
+
+	"github.com/chytilp/unitExplorer/request"
+)
+
+type CompetitionTable struct {
+	DB *sql.DB
+}
+
+func (c *CompetitionTable) InsertCompetition(competition request.Competition) (int64, error) {
+	insertSQL := `INSERT INTO competition(id, name) VALUES (?, ?)`
+	statement, err := c.DB.Prepare(insertSQL)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	res, err := statement.Exec(competition.Id, competition.Name)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	newId, err := res.LastInsertId()
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	return newId, nil
+}
+
+func (c *CompetitionTable) GetCompetition(id int64) (*request.Competition, error) {
+	var rec request.Competition
+	err := c.DB.QueryRow(`SELECT competition_id, id, name FROM competition WHERE competition_id = ?`,
+		id).Scan(&rec)
+	if err != nil {
+		return nil, err
+	}
+	return &rec, nil
+}

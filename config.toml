@@ -1,0 +1,10 @@
+apiUrl = "some url"
+databaseFile = "path to database.db"
+
+[[sources]]
+name = "source 1"
+sourceId = 2
+
+[[sources]]
+name = "source 2"
+sourceId = 18
