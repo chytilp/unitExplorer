@@ -11,16 +11,31 @@ import (
 )
 
 type CompetitionTable struct {
-	DB *sql.DB
+	DB       *sql.DB
+	SourceId int
+	DomainId string
+}
+
+func (c *CompetitionTable) DeleteCompetitions() error {
+	deleteSQL := `DELETE FROM competition WHERE source_id = ? AND domain_id = ?`
+	statement, err := c.DB.Prepare(deleteSQL)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	_, err = statement.Exec(c.SourceId, c.DomainId)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	return nil
 }
 
 func (c *CompetitionTable) InsertCompetition(competition request.Competition) (int64, error) {
-	insertSQL := `INSERT INTO competition(id, name) VALUES (?, ?)`
+	insertSQL := `INSERT INTO competition(id, name, source_id, domain_id) VALUES (?, ?, ?, ?)`
 	statement, err := c.DB.Prepare(insertSQL)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	res, err := statement.Exec(competition.Id, competition.Name)
+	res, err := statement.Exec(competition.Id, competition.Name, c.SourceId, c.DomainId)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}

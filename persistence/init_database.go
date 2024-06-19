@@ -50,6 +50,8 @@ func createCompetitionTable(db *sql.DB) error {
 	createCompetitionQuery := `CREATE TABLE IF NOT EXISTS competition(
 		competition_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		id TEXT NOT NULL,
+		source_id INTEGER NOT NULL,
+		domain_id TEXT NOT NULL,
 		name TEXT NOT NULL);`
 	return createTable(db, createCompetitionQuery)
 }
@@ -58,6 +60,8 @@ func createCompetitorTable(db *sql.DB) error {
 	createCompetitorQuery := `CREATE TABLE IF NOT EXISTS competitor(
 		competitor_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		id TEXT NOT NULL,
+		source_id INTEGER NOT NULL,
+		domain_id TEXT NOT NULL,
 		name TEXT NOT NULL);`
 	return createTable(db, createCompetitorQuery)
 }

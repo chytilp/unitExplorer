@@ -60,13 +60,13 @@ func (e *ListEvents) Run() error {
 	for _, event := range payload.Payload {
 		fmt.Printf("event -> id: %s, name: %s\n", event.Id, event.Name)
 	}
-	err = e.save(*sourceId, payload.Payload)
+	err = e.save(*sourceId, domain.Id, payload.Payload)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (e *ListEvents) save(sourceId int, events []request.Event) error {
+func (e *ListEvents) save(sourceId int, domainId string, events []request.Event) error {
 	return nil
 }
