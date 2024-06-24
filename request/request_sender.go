@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 )
@@ -40,7 +40,7 @@ func (s *Sender) sendRequest(request Request) ([]byte, error) {
 		return nil, err
 	}
 	fmt.Printf("Response status code: %d, reason: %s\n", res.StatusCode, res.Status)
-	resBody, err := ioutil.ReadAll(res.Body)
+	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
 		fmt.Printf("client: could not read response body: %s\n", err)
 		return nil, err
