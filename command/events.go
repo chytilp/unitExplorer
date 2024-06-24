@@ -19,16 +19,7 @@ func (e *ListEvents) Validate() error {
 }
 
 func (e *ListEvents) getDomain(sourceId int) (*request.Domain, error) {
-	db, err := persistence.GetDatabase(e.Config.DatabaseFile)
-	if err != nil {
-		fmt.Printf("err: %v\n", err)
-		return nil, err
-	}
-	domainTable := persistence.DomainTable{
-		DB:       db,
-		SourceId: sourceId,
-	}
-	domain, err := domainTable.GetDomain(e.DomainId)
+	domain, err := GetDomain(sourceId, e.DomainId, e.Config.DatabaseFile)
 	if err != nil {
 		fmt.Printf("err in getDomain: %v\n", err)
 		return nil, err
@@ -68,5 +59,25 @@ func (e *ListEvents) Run() error {
 }
 
 func (e *ListEvents) save(sourceId int, domainId string, events []request.Event) error {
+	db, err := persistence.GetDatabase(e.Config.DatabaseFile)
+	if err != nil {
+		fmt.Printf("GetDatabase err: %v\n", err)
+		return err
+	}
+	eventTable := persistence.EventTable{
+		DB:       db,
+		SourceId: sourceId,
+		DomainId: domainId,
+	}
+	err = eventTable.DeleteEvents()
+	if err != nil {
+		fmt.Printf("DeleteEvents err: %v\n", err)
+		return err
+	}
+	err = eventTable.InsertEvents(events)
+	if err != nil {
+		fmt.Printf("InsertEvents err: %v\n", err)
+		return err
+	}
 	return nil
 }

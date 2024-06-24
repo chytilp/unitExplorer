@@ -80,8 +80,17 @@ func main() {
 
 	case "markets":
 		marketsCmd.Parse(os.Args[2:])
-		fmt.Printf("command=markets, params: sourceName=%s, domainId: %s, eventId: %s",
-			marketSourceName, marketDomainId, marketEventId)
+		marketCommmand := command.ListMarkets{
+			SourceName: marketSourceName,
+			Config:     appConfig,
+			DomainId:   marketDomainId,
+			EventId:    marketEventId,
+		}
+		err = marketCommmand.Run()
+		if err != nil {
+			fmt.Printf("err: %v\n", err)
+			os.Exit(1)
+		}
 
 	default:
 		fmt.Println("expected 'foo' or 'bar' subcommands")
