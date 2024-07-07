@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/chytilp/unitExplorer/common"
+	"github.com/chytilp/unitExplorer/formatter"
 	"github.com/chytilp/unitExplorer/persistence"
 	"github.com/chytilp/unitExplorer/request"
 )
@@ -12,6 +13,7 @@ type ListEvents struct {
 	SourceName string
 	Config     *common.Config
 	DomainId   string
+	Formatter  *formatter.EventFormatter
 }
 
 func (e *ListEvents) Validate() error {
@@ -48,9 +50,9 @@ func (e *ListEvents) Run() error {
 		fmt.Printf("err: %v\n", err)
 		return err
 	}
-	for _, event := range payload.Payload {
+	/*for _, event := range payload.Payload {
 		fmt.Printf("event -> id: %s, name: %s\n", event.Id, event.Name)
-	}
+	}*/
 	err = e.save(*sourceId, domain.Id, payload.Payload)
 	if err != nil {
 		return err

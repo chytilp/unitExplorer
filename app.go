@@ -7,6 +7,7 @@ import (
 
 	"github.com/chytilp/unitExplorer/command"
 	"github.com/chytilp/unitExplorer/common"
+	"github.com/chytilp/unitExplorer/formatter"
 	"github.com/chytilp/unitExplorer/persistence"
 )
 
@@ -58,6 +59,7 @@ func main() {
 		domainCommmand := command.ListDomains{
 			SourceName: domainSourceName,
 			Config:     appConfig,
+			Formatter:  formatter.NewDomainFormatter(),
 		}
 		err = domainCommmand.Run()
 		if err != nil {
@@ -71,6 +73,7 @@ func main() {
 			SourceName: eventSourceName,
 			Config:     appConfig,
 			DomainId:   eventDomainId,
+			Formatter:  formatter.NewEventFormatter(),
 		}
 		err = eventCommmand.Run()
 		if err != nil {
@@ -85,6 +88,7 @@ func main() {
 			Config:     appConfig,
 			DomainId:   marketDomainId,
 			EventId:    marketEventId,
+			Formatter:  formatter.NewMarketFormatter(),
 		}
 		err = marketCommmand.Run()
 		if err != nil {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/chytilp/unitExplorer/common"
+	"github.com/chytilp/unitExplorer/formatter"
 	"github.com/chytilp/unitExplorer/persistence"
 	"github.com/chytilp/unitExplorer/request"
 )
@@ -11,10 +12,16 @@ import (
 type ListDomains struct {
 	SourceName string
 	Config     *common.Config
+	Formatter  *formatter.DomainFormatter
 }
 
 func (d *ListDomains) Validate() error {
 	return nil
+}
+
+func (d *ListDomains) getFilters(sourceId *int) []request.Base {
+	filter := request.Base{Id: fmt.Sprintf("%d", *sourceId), Name: d.SourceName}
+	return []request.Base{filter}
 }
 
 func (d *ListDomains) Run() error {
@@ -33,9 +40,15 @@ func (d *ListDomains) Run() error {
 		fmt.Printf("err: %v\n", err)
 		return err
 	}
-	for _, domain := range payload.Payload {
-		fmt.Printf("domain -> id: %s, name: %s\n", domain.Id, domain.Name)
+	d.Formatter.SetFilters(d.getFilters(sourceId))
+	d.Formatter.SetResults(payload.Payload)
+	err = d.Formatter.Print()
+	if err != nil {
+		return err
 	}
+	/*for _, domain := range payload.Payload {
+		fmt.Printf("domain -> id: %s, name: %s\n", domain.Id, domain.Name)
+	}*/
 	err = d.save(*sourceId, payload.Payload)
 	if err != nil {
 		return err

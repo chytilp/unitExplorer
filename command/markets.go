@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/chytilp/unitExplorer/common"
+	"github.com/chytilp/unitExplorer/formatter"
 	"github.com/chytilp/unitExplorer/persistence"
 	"github.com/chytilp/unitExplorer/request"
 )
@@ -13,6 +14,7 @@ type ListMarkets struct {
 	Config     *common.Config
 	DomainId   string
 	EventId    string
+	Formatter  *formatter.MarketFormatter
 }
 
 func (m *ListMarkets) Validate() error {
